@@ -33,8 +33,6 @@ def kernals(size,value,image):
 
 def draw(image,value):
     array = numpy.array(image)
-    print(array[200,200])
-    print(array[200,200][0],array[200,200][1],array[200,200][2])
     for y in range(image_rows):
         row = y
         for x in range(image_cols):
@@ -53,12 +51,12 @@ image_afterdraw = draw(image_afterdraw,value)
 
 #print (image_Shape)
 #print (value)
-#print(value[400][350],image_original[400,350])
+print(value[400][350],image_original[400,350])
 #print(image_original[400,350]+1)
 #print(image_afterdraw[400,350]+1)
-#cv2.imshow('a', image_afterdraw)
-#cv2.imshow('result', image_gray)
-#cv2.waitKey(0)
+cv2.imshow('a', image_afterdraw)
+cv2.imshow('result', image_gray)
+cv2.waitKey(0)
 
 
 
