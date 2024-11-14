@@ -21,7 +21,7 @@ def color_road_area(image):
     return result_image
 
 # 讀取圖片
-image_original = cv2.imread('test.jpg')
+image_original = cv2.imread('test1.jpg')
 
 # 塗上道路區域
 colored_image = color_road_area(image_original)
