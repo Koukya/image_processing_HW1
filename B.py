@@ -20,7 +20,7 @@ def kernal_operation(center, neighbor):
     """
     return 1 if neighbor >= center else 0
 
-def lbp(kernal_size, image):
+def lbp(kernal_size, image, top):
     """
     計算影像的 Local Binary Pattern (LBP)
     :param kernal_size: 核大小 (LBP 覆蓋區域的直徑)
@@ -50,23 +50,38 @@ def lbp(kernal_size, image):
             lbp_image[y, x] = binary_value
     flat_value = lbp_image.flatten()
     counter = Counter(flat_value)
-    top3 = counter.most_common(3)
+    top3 = counter.most_common(top)
     print(top3)
     return lbp_image,top3
 
-def draw(image1,image2,top):
+#def draw(image1,image2,top):
     rows, cols = image1.shape
     for y in range(0, rows):
         for x in range(0, cols):
-            if((image1[y,x] == top[0][0] or image1[y,x] == top[1][0] or image1[y,x] == top[2][0]) and image_gray[y,x] <= 100):
+            if((image1[y,x] == top[0][0] or image1[y,x] == top[1][0] or image1[y,x] == top[2][0]) and image_gray[y,x] <= 100 and image_original[y,x][1] < 50):
                 image2[y,x] = [0,0,255]
     return image2
+
+def draw(image1, image2, top, threshold=100):
+    """
+    改良的 draw 函式，新增閾值參數以提高靈活性
+    """
+    rows, cols = image1.shape
+    for y in range(rows):
+        for x in range(cols):
+            # 新增邊緣條件，確保高光點在特定區域
+            if (image1[y, x] in [t[0] for t in top[:3]] 
+                and image_gray[y, x] <= threshold ):
+                #and image_original[y, x] < 50):
+                image2[y, x] = [0, 255, 0]  # 改為綠色標記
+    return image2
+
 
 image_original = cv2.imread('pic/test.jpg')
 image_copy = image_original.copy()
 image_gray = cv2.cvtColor(image_original,cv2.COLOR_BGR2GRAY)
 image_guass = Guass(image_gray,5)
-image_lbp,top= lbp(3,image_guass)
+image_lbp,top= lbp(3,image_guass,5)
 image_draw = draw(image_lbp,image_copy,top)
 #image_canny = Canny(image_guass)
 
@@ -84,7 +99,6 @@ cv2.imshow('Gray',image_gray)
 cv2.imshow('Guass',image_guass)
 cv2.imshow('LBP',image_lbp)
 cv2.imshow('Draw',image_draw)
-#cv2.imshow('5',road_colored)
 
 #while True:
 #    min = cv2.getTrackbarPos('min', 'try')
